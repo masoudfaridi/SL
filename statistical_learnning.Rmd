@@ -1,0 +1,81 @@
+---
+title: "Statistical Learning"
+author: "Masoud Faridi"
+date: "2024-09-28"
+output: pdf_document
+  beamer_presentation: default
+  pdf_document:
+    latex_engine: xelatex
+    
+header-includes:
+- \usepackage[document]{ragged2e}
+- \usepackage[T1]{fontenc}
+- \usepackage[utf8]{inputenc}
+- \usepackage{float}
+- \usepackage{array}
+- \usepackage{fancyhdr}
+- \usepackage{graphicx}
+- \usepackage{hyperref}
+---
+
+
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE)
+```
+
+## What Is Statistical Learning?
+
+\justify
+
+Suppose that we observe a quantitative response $Y$ and $p$
+different predictors, $X_1, X_2, \cdots , X_p$. We assume that there is some
+relationship between $Y$ and $X = (X_1, X_2, \cdots , X_p)$, which can be written
+in the very general form $Y = f(X) + \epsilon$.
+
+Here $f$ is some fixed but unknown function of $X_1, . . . , X_p$, and $\epsilon$ is a random
+error term, which is independent of $X$ and has mean zero. In this formulation, $f$ represents the systematic information that $X$ provides about $Y$.
+
+Consider a given estimate $\hat{f}$ and a set of predictors $X$, which yields the
+prediction $\hat{Y} = \hat{f}(X)$. Assume for a moment that both $\hat{f}$ and $X$ are fixed,
+so that the only variability comes from $\epsilon$. Then, it is easy to show that
+
+$$\begin{aligned}
+E(Y-\hat{Y} )^2 = E\left(f(X) + \epsilon - \hat{f}(X) \right)^2 &=\left(f(X) - \hat{f}(X) \right)^2+\text{Var}(\epsilon) \\
+&= \underbrace{[f(X) - \hat{f}(X)]^2}_{\text{Reducible}} + \underbrace{\text{Var}(\epsilon)}_{\text{Irreducible}} 
+\end{aligned}
+$$
+
+
+
+where $E(Y - \hat{Y} )^2$ represents the average, or expected value, of the squared expected
+value difference between the predicted and actual value of $Y$ , and $\text{Var}(\epsilon)$ 
+  represents the variance associated with the error term $\epsilon$.
+The focus  is on techniques for estimating $f$ with the aim of
+minimizing the reducible error. It is important to keep in mind that the
+irreducible error will always provide an upper bound on the accuracy of
+our prediction for $Y$ . This bound is almost always unknown in practice.
+
+
+This is an R Markdown presentation. Markdown is a simple formatting syntax for authoring HTML, PDF, and MS Word documents. For more details on using R Markdown see <http://rmarkdown.rstudio.com>.
+
+When you click the **Knit** button a document will be generated that includes both content as well as the output of any embedded R code chunks within the document.
+
+## Slide with Bullets
+
+- Bullet 1
+- Bullet 2
+- Bullet 3
+
+## Slide with R Output
+
+```{r cars, echo = TRUE}
+summary(cars)
+```
+
+## Slide with Plot
+
+```{r pressure}
+plot(pressure)
+```
+
