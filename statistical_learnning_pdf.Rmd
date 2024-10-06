@@ -293,6 +293,322 @@ Return condition number of exogenous matrix.
 Calculated as ratio of largest to smallest singular value of the exogenous variables. This value is the same as the square root of the ratio of the largest to smallest eigenvalue of the inner-product of the exogenous variables.
 
 
+
+
+
+## Linear Model Selection and Regularization
+
+There are many alternatives, both classical and modern, to using least
+squares to fit. We discuss three important classes of
+methods.
+
+• Subset Selection. This approach involves identifying a subset of the p
+predictors that we believe to be related to the response. We then fit
+a model using least squares on the reduced set of variables.
+
+• Shrinkage. This approach involves fitting a model involving all p pre-
+dictors. However, the estimated coefficients are shrunken towards zero
+relative to the least squares estimates. This shrinkage (also known as
+regularization) has the effect of reducing variance. Depending on what
+type of shrinkage is performed, some of the coefficients may be esti-
+mated to be exactly zero. Hence, shrinkage methods can also perform
+variable selection.
+
+• Dimension Reduction. This approach involves projecting the p predic-
+tors into an M-dimensional subspace, where M < p. This is achieved
+by computing M different linear combinations, or projections, of the
+variables. Then these M projections are used as predictors to fit a
+linear regression model by least squares.
+
+
+## Subset Selection
+
+### Best Subset Selection
+
+To perform best subset selection, we fit a separate least squares regression best subset
+selection
+for each possible combination of the p predictors. That is, we fit all p models
+that contain exactly one predictor, all $\binom{p}{2}=\frac{p(p-1)}{2}$
+ models that contain
+exactly two predictors, and so forth. We then look at all of the resulting
+models, with the goal of identifying the one that is best.
+
+
+
+
+<center>
+![](images/14_bss.PNG){width=50%, height=50%}
+</center>
+
+While best subset selection is a simple and conceptually appealing approach, it suffers from computational limitations. The number of possible
+models that must be considered grows rapidly as $p$ increases. In general,
+there are $2^pp$ models that involve subsets of p predictors. So if $p = 10$,
+then there are approximately $1,000$ possible models to be considered, and if
+$p = 20$, then there are over one million possibilities!
+
+
+
+### Stepwise Selection
+
+For computational reasons, best subset selection cannot be applied with
+very large $p$. Best subset selection may also suffer from statistical problems
+when $p$ is large. The larger the search space, the higher the chance of finding
+models that look good on the training data, even though they might not
+have any predictive power on future data. Thus an enormous search space
+can lead to overfitting and high variance of the coefficient estimates.
+For both of these reasons, stepwise methods, which explore a far more
+restricted set of models, are attractive alternatives to best subset selection.
+
+
+#### Forward Stepwise Selection
+
+Forward stepwise selection is a computationally efficient alternative to best 
+subset selection. While the best subset selection procedure considers all
+$2^p$ possible models containing subsets of the p predictors, forward step-
+wise considers a much smaller set of models. Forward stepwise selection
+begins with a model containing no predictors, and then adds predictors
+to the model, one-at-a-time, until all of the predictors are in the model.
+In particular, at each step the variable that gives the greatest additional
+improvement to the fit is added to the model.
+
+Unlike best subset selection, which involved fitting $2^p$ models, forward
+stepwise selection involves fitting one null model, along with $p - k$ models
+in the $k$th iteration, for $k = 0, \cdots , p - 1$. This amounts to a total of 
+$$1 + \sum_{k=0}^{p-1} (p-k)=1+\frac{p(p+1)}{2}$$
+models. This is a substantial difference: when
+$p = 20$, best subset selection requires fitting $1,048,576$ models, whereas
+forward stepwise selection requires fitting only $211$ models.
+
+
+
+<center>
+
+![](images/15_fs.PNG){width=50%, height=50%}
+
+</center>
+
+#### Backward Stepwise Selection
+
+
+Like forward stepwise selection, backward stepwise selection provides an
+efficient alternative to best subset selection. However, unlike forward step-wise selection, it begins with the full least squares model containing all $p$
+predictors, and then iteratively removes the least useful predictor, one-at-a-time.
+
+
+
+<center>
+
+![](images/16_bs.PNG){width=50%, height=50%}
+
+</center>
+
+Like forward stepwise selection, the backward selection approach searches
+through only $1+p(p+1)/2$ models, and so can be applied in settings where
+$p$ is too large to apply best subset selection. Also like forward stepwise
+selection, backward stepwise selection is not guaranteed to yield the best
+model containing a subset of the p predictors.
+
+
+Backward selection requires that the number of samples $n$ is larger than
+the number of variables $p$ (so that the full model can be fit). In contrast,
+forward stepwise can be used even when $n < p$, and so is the only viable
+subset method when $p$ is very large.
+
+
+#### Hybrid Approaches
+
+The best subset, forward stepwise, and backward stepwise selection approaches generally give similar but not identical models. As another alternative, hybrid versions of forward and backward stepwise selection are
+available, in which variables are added to the model sequentially, in analogy
+to forward selection. However, after adding each new variable, the method
+may also remove any variables that no longer provide an improvement in
+the model fit. Such an approach attempts to more closely mimic best subset selection while retaining the computational advantages of forward and
+backward stepwise selection.
+
+
+### Choosing the Optimal Model
+
+To apply best subset selection, forward selection, and backward selection methods, we need a way to determine which of these models is best. 
+
+
+The training error can be a poor estimate of the test error.
+Therefore, $RSS$ and $R^2$ are not suitable for selecting the best model among
+a collection of models with different numbers of predictors.
+In order to select the best model with respect to test error, we need to
+estimate this test error. There are two common approaches:
+
+1. We can indirectly estimate test error by making an adjustment to the
+training error to account for the bias due to overfitting.
+
+2. We can directly estimate the test error, using either a validation set
+approach or a cross-validation approach
+
+#### $C_p$, AIC, BIC, and Adjusted $R^2$
+
+
+For a fitted least squares model containing d predictors, the $C_p$ estimate
+of test MSE is computed using the equation
+$$C_p = \frac{1}{n}\left(\text{RSS} + 2d \hat{\sigma}^2\right)$$
+where $\hat{\sigma}^2$ is an estimate of the variance of the error $\epsilon$ associated with each
+response measurement
+
+#### Validation and Cross-Validation
+
+In the past, performing cross-validation was computationally prohibitive
+for many problems with large $p$ and/or large $n$, and so AIC, BIC, $C_p$,
+and adjusted $R^22$ were more attractive approaches for choosing among a
+set of models. However, nowadays with fast computers, the computations
+required to perform cross-validation are hardly ever an issue. Thus, cross-
+validation is a very attractive approach for selecting from among a number
+of models under consideration.
+
+### Shrinkage Methods
+
+The subset selection methods described involve using least
+squares to fit a linear model that contains a subset of the predictors. As an
+alternative, we can fit a model containing all $p$ predictors using a technique
+that constrains or regularizes the coefficient estimates, or equivalently, that
+shrinks the coefficient estimates towards zero. It may not be immediately
+obvious why such a constraint should improve the fit, but it turns out that
+shrinking the coefficient estimates can significantly reduce their variance.
+The two best-known techniques for shrinking the regression coefficients
+towards zero are ridge regression and the lasso.
+
+### Ridge Regression
+
+
+The least squares fitting procedure estimates
+$\beta_0, \beta_1, \cdots , \beta_p$ using the values that minimize
+$$RSS = \sum_{i=1}^{n} (y_i - \hat{y}_i)^2 =\sum_{i=1}^{n} \left(y_i - \beta_0 -\sum_{j=1}^{p} \beta_j x_{ij}\right)^2$$
+
+
+Ridge regression is very similar to least squares, except that the coefficients ridge
+regression are estimated by minimizing a slightly different quantity.
+
+The
+ridge regression coefficient estimates $\hat{\beta}^{Ridge}$ are the values that minimize
+
+$$ \sum_{i=1}^{n} \left(y_i - \beta_0 -\sum_{j=1}^{p} \beta_j x_{ij}\right)^2 +\lambda \sum_{j=1}^{p} \beta_j^2 =\text{RSS} + \lambda \sum_{j=1}^{p} \beta_j^2$$
+
+
+where $\lambda \geq 0$ is a tuning parameter, to be determined separately. 
+The second term, 
+$$\lambda \sum_{j=1}^{p} \beta_j^2$$
+, called a shrinkage penalty, is shrinkage
+penalty 
+small when $\beta_0, \beta_1, \cdots , \beta_p$ are close to zero, and so it has the effect of shrinking
+the estimates of $\beta_j$ towards zero. The tuning parameter $\lambda$ serves to control
+the relative impact of these two terms on the regression coefficient estimates.
+When $\lambda=0$, the penalty term has no effect, and ridge regression
+will produce the least squares estimates. However, as $\lambda \to +\infty$, the impact of
+the shrinkage penalty grows, and the ridge regression coefficient estimates
+will approach zero.
+
+Ridge regression’s advantage over least squares is rooted in the bias-variance
+trade-off. As $\lambda$ increases, the flexibility of the ridge regression fit decreases,
+leading to decreased variance but increased bias. 
+
+### The Lasso
+
+Ridge regression does have one obvious disadvantage. Unlike best subset,
+forward stepwise, and backward stepwise selection, which will generally
+select models that involve just a subset of the variables, ridge regression
+will include all p predictors in the final model. The penalty $\lambda \sum_{j=1}^{p} \beta_j^2$
+will shrink all of the coefficients towards zero, but it will not set any of them
+exactly to zero (unless $\lambda = +\infty$). This may not be a problem for prediction
+accuracy, but it can create a challenge in model interpretation in settings in
+which the number of variables p is quite large.
+
+The
+Lasso regression coefficient estimates $\hat{\beta}^{Lasso}$ are the values that minimize
+
+$$ \sum_{i=1}^{n} \left(y_i - \beta_0 -\sum_{j=1}^{p} \beta_j x_{ij}\right)^2 +\lambda \sum_{j=1}^{p} \beta_j^2 =\text{RSS} + \lambda \sum_{j=1}^{p} |\beta_j|$$
+where $\lambda \geq 0$ is a tuning parameter.
+
+
+### Another Formulation for Ridge Regression and the Lasso
+
+One can show that the lasso and ridge regression coefficient estimates solve
+the problems
+
+$$\underset{\beta}{\text{minimize}}\sum_{i=1}^{n} \left(y_i - \beta_0 -\sum_{j=1}^{p} \beta_j x_{ij}\right)^2 \quad \text{subject to } \quad \lambda \sum_{j=1}^{p} \beta_j^2 \leq s$$
+
+and
+
+
+$$\underset{\beta}{\text{minimize}}\sum_{i=1}^{n} \left(y_i - \beta_0 -\sum_{j=1}^{p} \beta_j x_{ij}\right)^2 \quad \text{subject to } \quad \lambda \sum_{j=1}^{p} |\beta_j| \leq s$$
+
+
+respectively.
+
+<center>
+
+![](images/17_lassoridge.PNG){width=50%, height=50%}
+<figcaption>Contours of the error and constraint functions for the lasso
+(left) and ridge regression (right). The solid blue areas are the constraint regions,
+$|\beta_1|+|\beta_2| \leq s$ and $\beta_1^2+\beta_2^2 \leq s$, while the red ellipses are the contours of the RSS.
+.</figcaption>  
+</center>
+
+### Dimension Reduction Methods
+
+The methods that we have discussed so far in this chapter have controlled
+variance in two different ways, either by using a subset of the original variables, or by shrinking their coefficients toward zero. All of these methods
+are defined using the original predictors, $X_1, X_2, \cdots , X_p$. We now explore
+a class of approaches that transform the predictors and then fit a least
+squares model using the transformed variables. We will refer to these techniques as dimension reduction methods.
+
+### Principal Components Regression
+
+#### The Principal Components Regression Approach
+
+The principal components regression (PCR) approach involves constructing the first $M$ principal components, 
+$Z_1, . . . , Z_M$, and then using these
+components as the predictors in a linear regression model that is fit using least squares. The key idea is that often a small number of principal
+components suffice to explain most of the variability in the data, as well
+as the relationship with the response. In other words, we assume that the
+directions in which $X_1, . . . , X_p$ show the most variation are the directions
+that are associated with Y. While this assumption is not guaranteed to be
+true, it often turns out to be a reasonable enough approximation to give
+good results.
+
+Let $Z_1, . . . , Z_M$ represent $M < p$ linear combinations of our original
+linear combination $p$ predictors. That is,
+$$Z_m = \sum_{j=1}^{p} \phi_{jm} X_j$$
+
+for some constants 
+$$\phi_{1m},\cdots , \phi_{pm} \quad \quad m=1, \cdots , M$$
+We can then fit the
+linear regression model
+
+$$Y_i = \beta_0 + \sum_{j=1}^{M} \beta_j Z_{im} + \epsilon_i$$
+
+using least squares.
+
+
+
+### Partial Least Squares
+
+The PCR approach that we just described involves identifying linear combinations, 
+or directions, that best represent the predictors 
+$X_1, . . . , X_p$. These
+directions are identified in an unsupervised way, since the response $Y$ is
+not used to help determine the principal component directions. That is,
+the response does not supervise the identification of the principal components. Consequently, PCR suffers from a drawback: there is no guarantee
+that the directions that best explain the predictors will also be the best
+directions to use for predicting the response.
+
+We now present partial least squares (PLS), a supervised alternative to partial least
+squares
+PCR. Like PCR, PLS is a dimension reduction method, which first identifies
+a new set of features $Z_1, . . . , Z_M$ that are linear combinations of the original
+features, and then fits a linear model via least squares using these M new
+features. But unlike PCR, PLS identifies these new features in a supervised
+way—that is, it makes use of the response Y in order to identify new
+features that not only approximate the old features well, but also that are
+related to the response. Roughly speaking, the PLS approach attempts to
+find directions that help explain both the response and the predictors.
+
+
 ## Classification
 
 
@@ -1145,3 +1461,6 @@ class for which $\beta_{0k} + \beta_{1k}x^*_1 + \cdots , \beta_{pk}x^*_p$
  is largest, as this amounts
 to a high level of confidence that the test observation belongs to the $k$th
 class rather than to any of the other classes.
+
+
+
