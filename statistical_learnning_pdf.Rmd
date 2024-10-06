@@ -14,7 +14,7 @@ output: pdf_document
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
-## What Is Statistical Learning?
+# What Is Statistical Learning?
 
 
 
@@ -46,7 +46,7 @@ our prediction for $Y$ . This bound is almost always unknown in practice.
 
 
 
-### The Trade-Off Between Prediction Accuracy and Model Interpretability
+## The Trade-Off Between Prediction Accuracy and Model Interpretability
 
 One might reasonably ask the following question: why would we ever
 choose to use a more restrictive method instead of a very flexible approach?
@@ -67,7 +67,7 @@ of a method increases, its interpretability decreases.</figcaption>
 
 
 
-### The Bias-Variance Trade-Off
+## The Bias-Variance Trade-Off
 
 
 
@@ -153,9 +153,9 @@ Increase in Variance:
 Thus, as flexibility increases, while the model can respond to the complexities of relationships and show lower bias, there is also the risk of increased variability, which can lead to poor performance on new data. This relationship between bias and variance forms the basis of the bias-variance trade-off, a key concept in machine learning and statistics.
 
 
-## Linear Regression
+# Linear Regression
 
-### R-squared
+## R-squared
 
 $$\begin{aligned}
 R^2=\frac{SSR}{SST}=1-\frac{SSE}{SST}
@@ -164,7 +164,7 @@ R^2=\frac{SSR}{SST}=1-\frac{SSE}{SST}
 =1-\frac{\text{Unexplained Variation}}{\text{Total variation}}
 \end{aligned}.$$
 
-### Adjusted R-squared: 
+## Adjusted R-squared: 
 
 
 $$\begin{aligned}
@@ -175,7 +175,7 @@ $$\begin{aligned}
 Where $p=K+1$ and $K$ is the number of independent regressors.
 
 
-### ANOVA
+## ANOVA
 
 $$
 \begin{array}{ccccccc}
@@ -205,7 +205,7 @@ H0 : \beta_1 = 0 \text{ and } HA : \beta_1 \neq 0 \text{ and } \text{Test
 Statistic:} F^{*}=\frac{MSR}{MSE}   \text{ and } \text{Rejection Region:} F^* > F_{(\alpha,p,n-p)} & \text{P-value:}P(F_{(\alpha,p,n-p)} \geq F^*)
 \end{array}$$
 
-### AIC
+## AIC
 
 Let p be the number of estimated parameters in the model. Let 
 $\hat{L}$ be the maximized value of the likelihood function for the model. Then the AIC 
@@ -215,7 +215,7 @@ value of the model is the following:
 $$\mathrm{AIC} = 2p-2\ln\left(\hat{L}\right)$$
 
 
-### BIC
+## BIC
 
 The Bayesian information criterion (BIC): defined as:
 
@@ -227,15 +227,15 @@ $$\mathrm{BIC} = p \log n-2\ln\left(\hat{L}\right)$$
 </center>
 
 
-### Omnibus/Prob(Omnibus)
+## Omnibus/Prob(Omnibus)
 
 This function tests the null hypothesis that a sample comes from a normal distribution. It is based on D’Agostino and Pearson’s  test that combines skew and kurtosis to produce an omnibus test of normality.
 
-#### statistic
+### statistic
 
 s^2 + k^2, where s is the z-score returned by skewtest and k is the z-score returned by kurtosistest.
 
-#### pvalue
+### pvalue
 
 A 2-sided chi squared probability for the hypothesis test.
 
@@ -286,7 +286,7 @@ Warning 2 states that the smallest eigenvalue (of the moment matrix) is $1.02 \t
 
 The condition number measures how numerically stable the matrix is. A large condition number indicates that the matrix is ill-conditioned. This means that it is sensitive to small changes in its elements and can lead to large changes in the solution when solving linear systems.
 
-#### OLSResults.condition_number
+### OLSResults.condition_number
 
 Return condition number of exogenous matrix.
 
@@ -296,7 +296,7 @@ Calculated as ratio of largest to smallest singular value of the exogenous varia
 
 
 
-## Linear Model Selection and Regularization
+# Linear Model Selection and Regularization
 
 There are many alternatives, both classical and modern, to using least
 squares to fit. We discuss three important classes of
@@ -323,7 +323,7 @@ linear regression model by least squares.
 
 ## Subset Selection
 
-### Best Subset Selection
+## Best Subset Selection
 
 To perform best subset selection, we fit a separate least squares regression best subset
 selection
@@ -348,7 +348,7 @@ $p = 20$, then there are over one million possibilities!
 
 
 
-### Stepwise Selection
+## Stepwise Selection
 
 For computational reasons, best subset selection cannot be applied with
 very large $p$. Best subset selection may also suffer from statistical problems
@@ -360,7 +360,7 @@ For both of these reasons, stepwise methods, which explore a far more
 restricted set of models, are attractive alternatives to best subset selection.
 
 
-#### Forward Stepwise Selection
+### Forward Stepwise Selection
 
 Forward stepwise selection is a computationally efficient alternative to best 
 subset selection. While the best subset selection procedure considers all
@@ -387,7 +387,7 @@ forward stepwise selection requires fitting only $211$ models.
 
 </center>
 
-#### Backward Stepwise Selection
+### Backward Stepwise Selection
 
 
 Like forward stepwise selection, backward stepwise selection provides an
@@ -415,7 +415,7 @@ forward stepwise can be used even when $n < p$, and so is the only viable
 subset method when $p$ is very large.
 
 
-#### Hybrid Approaches
+### Hybrid Approaches
 
 The best subset, forward stepwise, and backward stepwise selection approaches generally give similar but not identical models. As another alternative, hybrid versions of forward and backward stepwise selection are
 available, in which variables are added to the model sequentially, in analogy
@@ -425,7 +425,7 @@ the model fit. Such an approach attempts to more closely mimic best subset selec
 backward stepwise selection.
 
 
-### Choosing the Optimal Model
+## Choosing the Optimal Model
 
 To apply best subset selection, forward selection, and backward selection methods, we need a way to determine which of these models is best. 
 
@@ -442,7 +442,7 @@ training error to account for the bias due to overfitting.
 2. We can directly estimate the test error, using either a validation set
 approach or a cross-validation approach
 
-#### $C_p$, AIC, BIC, and Adjusted $R^2$
+### $C_p$, AIC, BIC, and Adjusted $R^2$
 
 
 For a fitted least squares model containing d predictors, the $C_p$ estimate
@@ -451,7 +451,7 @@ $$C_p = \frac{1}{n}\left(\text{RSS} + 2d \hat{\sigma}^2\right)$$
 where $\hat{\sigma}^2$ is an estimate of the variance of the error $\epsilon$ associated with each
 response measurement
 
-#### Validation and Cross-Validation
+### Validation and Cross-Validation
 
 In the past, performing cross-validation was computationally prohibitive
 for many problems with large $p$ and/or large $n$, and so AIC, BIC, $C_p$,
@@ -461,7 +461,7 @@ required to perform cross-validation are hardly ever an issue. Thus, cross-
 validation is a very attractive approach for selecting from among a number
 of models under consideration.
 
-### Shrinkage Methods
+## Shrinkage Methods
 
 The subset selection methods described involve using least
 squares to fit a linear model that contains a subset of the predictors. As an
@@ -473,7 +473,7 @@ shrinking the coefficient estimates can significantly reduce their variance.
 The two best-known techniques for shrinking the regression coefficients
 towards zero are ridge regression and the lasso.
 
-### Ridge Regression
+## Ridge Regression
 
 
 The least squares fitting procedure estimates
@@ -507,7 +507,7 @@ Ridge regression’s advantage over least squares is rooted in the bias-variance
 trade-off. As $\lambda$ increases, the flexibility of the ridge regression fit decreases,
 leading to decreased variance but increased bias. 
 
-### The Lasso
+## The Lasso
 
 Ridge regression does have one obvious disadvantage. Unlike best subset,
 forward stepwise, and backward stepwise selection, which will generally
@@ -525,7 +525,7 @@ $$ \sum_{i=1}^{n} \left(y_i - \beta_0 -\sum_{j=1}^{p} \beta_j x_{ij}\right)^2 +\
 where $\lambda \geq 0$ is a tuning parameter.
 
 
-### Another Formulation for Ridge Regression and the Lasso
+## Another Formulation for Ridge Regression and the Lasso
 
 One can show that the lasso and ridge regression coefficient estimates solve
 the problems
@@ -549,7 +549,7 @@ $|\beta_1|+|\beta_2| \leq s$ and $\beta_1^2+\beta_2^2 \leq s$, while the red ell
 .</figcaption>  
 </center>
 
-### Dimension Reduction Methods
+## Dimension Reduction Methods
 
 The methods that we have discussed so far in this chapter have controlled
 variance in two different ways, either by using a subset of the original variables, or by shrinking their coefficients toward zero. All of these methods
@@ -597,8 +597,7 @@ the response does not supervise the identification of the principal components. 
 that the directions that best explain the predictors will also be the best
 directions to use for predicting the response.
 
-We now present partial least squares (PLS), a supervised alternative to partial least
-squares
+We now present partial least squares (PLS), a supervised alternative to 
 PCR. Like PCR, PLS is a dimension reduction method, which first identifies
 a new set of features $Z_1, . . . , Z_M$ that are linear combinations of the original
 features, and then fits a linear model via least squares using these M new
@@ -608,11 +607,41 @@ features that not only approximate the old features well, but also that are
 related to the response. Roughly speaking, the PLS approach attempts to
 find directions that help explain both the response and the predictors.
 
+We now describe how the first PLS direction is computed. After standardizing the $p$ predictors, PLS computes the first direction $Z_1$ by setting
+each $\phi_{j1}$ in 
 
-## Classification
+$$Z_m = \sum_{j=1}^{p} \phi_{jm} X_j$$
+
+equal to the coefficient from the simple linear regression
+of $Y$ onto $X_j$. One can show that this coefficient is proportional to the correlation between 
+$Y$ and $X_j$. Hence, in computing $Z_1 = \sum_{j=1}^{p} \phi_{j1} X_j$, PLS
+places the highest weight on the variables that are most strongly related to
+the response.
+
+To identify the second PLS direction we first adjust each of the variables
+for $Z_1$, by regressing each variable on $Z_1$ and taking residuals. These residuals can be interpreted as the remaining information that has not been
+explained by the first PLS direction. We then compute $Z_2$ using this orhogonalized data in exactly the same fashion as $Z_1$ was computed based
+on the original data. This iterative approach can be repeated $M$ times to
+identify multiple PLS components $Z_1, \cdots , Z_M$. Finally, at the end of this
+procedure, we use least squares to fit a linear model to predict $Y$ using
+$Z_1, \cdots , Z_M$ in exactly the same fashion as for PCR.
+
+This means identifying the second PLS direction:
+
+* First, we regress each of the predictor variables (X) on $Z_1$ and obtain the residuals. These residuals represent the information that has not been explained by $Z_1$.
+
+* Then, $Z_2$ is computed using this new data (the residuals) in the same way that $Z_1$ was calculated. This allows us to identify new features that provide information independently of $Z_1$.
 
 
-### The Classification Setting
+As with PCR, the number $M$ of partial least squares directions used in
+PLS is a tuning parameter that is typically chosen by cross-validation. We
+generally standardize the predictors and response before performing PLS.
+
+
+# Classification
+
+
+## The Classification Setting
 
 Suppose that we seek to estimate f on the basis of training observations 
 $$\{(x_1, y_1), \cdots , (x_n, y_n)\}$$
@@ -630,7 +659,7 @@ If $1_{\{y_i \neq \hat{y}_i\}} = 0$ then the ith observation was classified corr
 classification method; otherwise it was misclassified. Hence The Equation 
 computes the fraction of incorrect classifications.
 
-### Bayes classifier
+## Bayes classifier
 
 The conditional probability assigns each observation to the most likely class,
 given its predictor values
@@ -652,7 +681,7 @@ $$1 - E\left(\max_j Pr(Y = j|X)\right)$$
 $X$.
 
 
-### K-Nearest Neighbors
+## K-Nearest Neighbors
 
 In theory we would always like to predict qualitative responses using the
 Bayes classifier. But for real data, we do not know the conditional distribution of $Y$ given $X$,
@@ -671,13 +700,13 @@ Finally, KNN classifies the test observation $x_0$ to the class with the largest
 probability from the above conditional probability.
 
 
-### The Logistic Model
+## The Logistic Model
 
 
 $$\log \left(\frac{p(X)}{1-p(x)}\right) = \beta_0 + \beta_1 X$$
 
 
-### Generative Models for Classification
+## Generative Models for Classification
 
 Logistic regression involves directly modeling $\text{Pr}(Y = k|X = x)$ using the
 logistic function. We now consider an alternative and less direct
@@ -696,7 +725,7 @@ $$\text{Pr}(Y = k |  X = x ) = \frac{\pi_k f_k(x)}{\sum_{l=1}^{K} \pi_l f_l(x)} 
 This is the posterior probability that an observation posterior
 $X = x$ belongs to the $k$th class.
 
-### Linear Discriminant Analysis
+## Linear Discriminant Analysis
 
 
 
@@ -716,7 +745,7 @@ $$\delta_k(x) = x^T \Sigma^{-1} \mu_k - \frac{1}{2} \mu_k^T \Sigma^{-1} \mu_k + 
 is largest.
 
 
-### Quadratic Discriminant Analysis
+## Quadratic Discriminant Analysis
 
 Unlike LDA, QDA assumes that each class has its own
 covariance matrix. That is, it assumes that an observation from the $k$th
@@ -726,7 +755,7 @@ $$\delta_k(x) = - \frac{1}{2} (x-\mu_k)^T \Sigma_k^{-1} (x-\mu_k) - \frac{1}{2}\
 is largest.
 
 
-### Naive Bayes
+## Naive Bayes
 
 Recall the Bayes’ theorem 
 $$\text{Pr}(Y = k |  X = x ) = \frac{\pi_k f_k(x)}{\sum_{l=1}^{K} \pi_l f_l(x)}  $$
@@ -758,14 +787,14 @@ in the $k$th class.
 
 $$\text{Pr}(Y = k |  X = x ) = \frac{\pi_k f_{k1}(x_1) \times f_{k2}(x_2) \times \cdots \times f_{kp}(x_p)}{\sum_{l=1}^{K} \pi_l f_{l1}(x_1) \times f_{l2}(x_2) \times \cdots \times f_{lp}(x_p)}  $$
 
-## Tree-Based Methods
+# Tree-Based Methods
 
-### Decision Trees
-
-
+## Decision Trees
 
 
-#### Regression Trees
+
+
+### Regression Trees
 
 We now discuss the process of building a regression tree. Roughly speaking,
 there are two steps.
@@ -844,7 +873,7 @@ Once the regions $R_1, R_2, \cdots , R_J$ have been created, we predict the resp
 for a given test observation using the mean of the training observations in
 the region to which that test observation belongs.
 
-#### Tree Pruning
+### Tree Pruning
 
 The process described above may produce good predictions on the training
 set, but is likely to overfit the data, leading to poor test set performance.
@@ -884,7 +913,7 @@ $$N_m = \quad \#\{i:xi \in R_m\}$$
 </center>
 
 
-#### Classification Trees
+### Classification Trees
 
 
 
@@ -924,7 +953,7 @@ $$\begin{aligned}
 \end{aligned}$$
 
 
-### Bagging (Bootstrap aggregation / weak learners)
+## Bagging (Bootstrap aggregation / weak learners)
 
 
 An ensemble method is an approach that combines many simple “building block” models in order to obtain a single and potentially very powerful
@@ -950,7 +979,7 @@ to multiple training sets. Instead, we can bootstrap, by taking repeated
 samples from the (single) training data set. This is called bagging.
 
 
-#### Variable Importance Measures
+### Variable Importance Measures
 
 
 s we have discussed, bagging typically results in improved accuracy over
@@ -973,7 +1002,7 @@ trees, we can add up the total amount that the Gini index (8.6) is decreased
 by splits over a given predictor, averaged over all B trees.
 
 
-### Random Forests
+## Random Forests
 
 Random forests provide an improvement over bagged trees by way of a random
 forest
@@ -1015,7 +1044,7 @@ We randomly divided the observations into a training and a test set, and
 applied random forests to the training set for three different values of the
 number of splitting variables $m$.
 
-### Boosting
+## Boosting
 
 Like bagging, boosting is a general
 approach that can be applied to many statistical learning methods for regression or classification.
@@ -1065,7 +1094,98 @@ these differences significant. The test error rate for a single tree is $24\%$.<
 </center>
 
 
-### Bayesian Additive Regression Trees (BART)
+### Final Output  
+After \(B\) iterations, the final model will be:  
+\[  
+\hat{f}(x) = \sum_{b=1}^{B} \lambda \hat{f}^b(x)  
+\]  
+
+This algorithm gradually improves the residuals and guides the final model towards higher accuracy.  
+
+
+### Example Data  
+
+|  X  |  y  |  
+|-----|-----|  
+|  1  |  2  |  
+|  2  |  3  |  
+|  3  |  5  |  
+|  4  |  7  |  
+
+### Algorithm Steps  
+
+#### 1. Initialization  
+-  \( \hat{f}(x) = 0 \) for all \(i\)  
+-  \( r_i = y_i \) for all \(i\) (the residuals are equal to the target values)  
+
+Therefore:  
+\[  
+r_1 = 2 \\
+r_2 = 3 \\
+r_3 = 5 \\
+r_4 = 7  
+\]  
+
+#### 2. Iteration for \(b = 1\)  
+##### (a) Fit a Tree  
+Fit a tree \( \hat{f}^b \) with \(d\) splits (for example, let \(d = 1\)) to the training data. Suppose our tree is as follows:  
+- If \(X \leq 2\), then \( \hat{f}^b(x) = 2\)  
+- If \(X > 2\), then \( \hat{f}^b(x) = 6\)  
+
+##### (b) Update \( \hat{f} \)  
+Suppose \( \lambda = 0.5 \)  
+
+Therefore:  
+\[  
+\hat{f}(x) \leftarrow \hat{f}(x) + \lambda \hat{f}^b(x)  
+\]  
+
+- For \(X = 1\):  
+\[  
+\hat{f}(1) = 0 + 0.5 \times 2 = 1  
+\]  
+- For \(X = 2\):  
+\[  
+\hat{f}(2) = 0 + 0.5 \times 2 = 1  
+\]  
+- For \(X = 3\):  
+\[  
+\hat{f}(3) = 0 + 0.5 \times 6 = 3  
+\]  
+- For \(X = 4\):  
+\[  
+\hat{f}(4) = 0 + 0.5 \times 6 = 3  
+\]  
+
+##### (c) Update the Residuals  
+\[  
+r_i \leftarrow r_i - \lambda \hat{f}^b(x_i)  
+\]  
+
+- For \(X = 1\):  
+\[  
+r_1 = 2 - 0.5 \times 2 = 1  
+\]  
+- For \(X = 2\):  
+\[  
+r_2 = 3 - 0.5 \times 2 = 2  
+\]  
+- For \(X = 3\):  
+\[  
+r_3 = 5 - 0.5 \times 6 = 2  
+\]  
+- For \(X = 4\):  
+\[  
+r_4 = 7 - 0.5 \times 6 = 4  
+\]  
+
+#### 3. Iteration for \(b = 2\)  
+Using the new residuals, we fit a new tree and repeat the steps.  
+
+
+
+
+## Bayesian Additive Regression Trees (BART)
 
 
 Recall that bagging and random forests make predictions from an average of regression trees, each of which is built using a random sample of data
@@ -1168,7 +1288,7 @@ ensemble of trees: each time we randomly perturb a tree in order to fit the
 residuals, we are in fact drawing a new tree from a posterior distribution.
 (Of course, this Bayesian connection is the motivation for BART’s name.)
 
-#### Summary of Tree Ensemble Methods
+### Summary of Tree Ensemble Methods
 
 Trees are an attractive choice of weak learner for an ensemble method
 for a number of reasons, including their flexibility and ability to handle
@@ -1195,12 +1315,12 @@ to avoid local minima and achieve a more thorough exploration of
 the model space.
 
 
-## Support Vector Machines
+# Support Vector Machines
 
 
-### Maximal Margin Classifier
+## Maximal Margin Classifier
 
-#### What Is a Hyperplane?
+### What Is a Hyperplane?
 
 In a $p$-dimensional space, a hyperplane is a flat affine subspace of 
 dimension $p-1$. For instance, in two dimensions, a hyperplane is a flat
@@ -1237,7 +1357,7 @@ determine on which side of the hyperplane a point lies by simply calculating
 the sign of the left-hand side of (9.2).
 
 
-#### Classification Using a Separating Hyperplane
+### Classification Using a Separating Hyperplane
 
 
 We can label the observations $y_i = 1$ and
@@ -1265,7 +1385,7 @@ and so we can be confident about our class assignment for $x^*$. On the other
 hand, if $f(x^*)$ is close to zero, then $x^*$ is located near the hyperplane, and so
 we are less certain about the class assignment for $x^*$.
 
-#### The Maximal Margin Classifier (optimal separating hyperplane)
+### The Maximal Margin Classifier (optimal separating hyperplane)
 
 In general, if our data can be perfectly separated using a hyperplane, then
 there will in fact exist an infinite number of such hyperplanes. This is
@@ -1305,7 +1425,7 @@ on the sign of
 $$f(x^*) =\left(\beta_0 + \beta_1X_1^* + \beta_2X_2^* + \cdots + \beta_pX_p^*\right)$$
 
 
-#### Construction of the Maximal Margin Classifier
+### Construction of the Maximal Margin Classifier
 
 We now consider the task of constructing the maximal margin hyperplane
 based on a set of n training observations $x_1, \cdots , x_n \in \mathbf{R}^p$  and associated
@@ -1320,7 +1440,7 @@ y_i(\beta_b + \beta_1 x_{i,1} + \cdots +\beta_p x_{ip}) \geq  &M& \quad  \text{f
 
 
 
-#### The Non-separable Case
+### The Non-separable Case
 
 
 The maximal margin classifier is a very natural way to perform classification, if a separating hyperplane exists. However, as we have hinted, in
@@ -1342,7 +1462,7 @@ soft margin. The generalization of the maximal margin classifier to the
 non-separable case is known as the support vector classifier.
 
 
-### Support Vector Classifiers
+## Support Vector Classifiers
 
 
 The support vector classifier classifies a test observation depending on
@@ -1377,7 +1497,7 @@ large. As C decreases, the tolerance for observations being on the wrong side of
 the margin decreases, and the margin narrows.</figcaption>  
 </center>
 
-### Support Vector Machines
+## Support Vector Machines
 
 The support vector classifier is a natural approach for classification in the
 two-class setting, if the boundary between the two classes is linear. How-
@@ -1421,7 +1541,7 @@ $$f(x) = \beta_0 + \sum_{i\in S}^n \alpha_i K(x,x_i)$$
 \text{Neural network:} k(x, x^\prime) = \tanh(\kappa_1\left<x, x^\prime\right> + \kappa_2)
 \end{eqnarray}
 
-### SVMs with More than Two Classes
+## SVMs with More than Two Classes
 
 So far, our discussion has been limited to the case of binary classification:
 that is, classification in the two-class setting. How can we extend SVMs
@@ -1433,7 +1553,7 @@ made, the two most popular are the one-versus-one and one-versus-all
 approaches. We briefly discuss those two approaches here.
 
 
-#### One-Versus-One Classification
+### One-Versus-One Classification
 
 
 Suppose that we would like to perform classification using SVMs, and there
@@ -1451,7 +1571,7 @@ $\binom{k}{2}$
 pairwise classifications.
 
 
-#### One-Versus-All (one-versus-rest)Classification
+### One-Versus-All (one-versus-rest)Classification
 The one-versus-all approach (also referred to as one-versus-rest) is an alternative procedure for applying SVMs in the case of $K > 2$ classes. We
 fit $K$ SVMs, each time comparing one of the $K$ classes to the remaining
 $K-1$ classes. Let $\beta_{0k}, \beta_{1k}, \cdots , \beta_{pk}$ denote the parameters that result from
