@@ -1583,4 +1583,173 @@ to a high level of confidence that the test observation belongs to the $k$th
 class rather than to any of the other classes.
 
 
+# Unsupervised Learning
+
+This chapter will instead focus on unsupervised learning, a set of statistical tools intended for the setting in which we have only a set of features $X_1, X_2, \cdots , X_p$ measured on n observations. We are not interested
+in prediction, because we do not have an associated response variable $Y$ .
+Rather, the goal is to discover interesting things about the measurements
+on $X_1, X_2, \cdots , X_p$. Is there an informative way to visualize the data? Can
+we discover subgroups among the variables or among the observations?
+Unsupervised learning refers to a diverse set of techniques for answering
+questions such as these.
+
+
+### The Challenge of Unsupervised Learning
+
+
+Unsupervised learning is often much more challenging than supervised learning. The
+exercise tends to be more subjective, and there is no simple goal for the
+analysis, such as prediction of a response. Unsupervised learning is often
+performed as part of an exploratory data analysis. Furthermore, it can be 
+hard to assess the results obtained from unsupervised learning methods,
+since there is no universally accepted mechanism for performing cross-validation or validating results on an independent data set. The reason
+for this difference is simple. If we fit a predictive model using a supervised
+learning technique, then it is possible to check our work by seeing how
+well our model predicts the response $Y$ on observations not used in fitting
+the model. However, in unsupervised learning, there is no way to check our
+work because we don’t know the true answer, the problem is unsupervised.
+
+Techniques for unsupervised learning are of growing importance in a
+number of fields. An online shopping site might try
+to identify groups of shoppers with similar browsing and purchase histories, as well as items that are of particular interest to the shoppers within
+each group. Then an individual shopper can be preferentially shown the
+items in which he or she is particularly likely to be interested, based on
+the purchase histories of similar shoppers.
+
+## Principal Components Analysis
+
+
+### Another Interpretation of Principal Components
+
+
+From all approximations of the form   
+$$  
+x_{ij} \approx \sum_{m=1}^{M} a_{im} b_{jm},  
+$$  
+we may ask for those that minimize the total sum of squared residuals:  
+
+$$  
+\begin{aligned}  
+\underset{A \in \mathbb{R}^{n \times M}, B \in \mathbb{R}^{p \times M}}{\text{minimize}} 
+\quad  \sum_{j=1}^{p} \sum_{i=1}^{n} \left( x_{ij} - \sum_{m=1}^{M} a_{im} b_{jm} \right)^{2}   
+\end{aligned}  
+$$  
+
+Here, $A$ is an $n \times M$ matrix whose $(i,m)$th element is $a_{im}$ and $B$ is a $p \times M$ matrix whose
+$(j,m)$th element is $b_{jm}$.  
+
+### Other Uses for Principal Components
+
+As we saw, we can perform regression using the principal
+component score vectors as features. In fact, many statistical techniques,
+such as regression, classification, and clustering, can be easily adapted to
+use the $n \times M$ matrix whose columns are the first $M << p$ principal component score vectors, rather than using the full $n \times p$ data matrix. This
+can lead to less noisy results, since it is often the case that the signal (as
+opposed to the noise) in a data set is concentrated in its first few principal
+components.
+
+### Missing Values and Matrix Completion
+
+In this section we show how principal components can be used to impute 
+the missing values, through a process known as matrix completion. The
+completed matrix can then be used in a statistical learning method, such
+as linear regression or LDA.
+
+
+This approach for imputing missing data is appropriate if the missingness
+is random. 
+
+$$\mathbf{O}$$
+
+Suppose that some of the observations xij are
+missing. We now show how one can both impute the missing values and
+solve the principal component problem at the same time. We return to a
+modified form of the optimization problem
+
+$$  
+\begin{aligned}  
+\underset{A \in \mathbb{R}^{n \times M}, B \in \mathbb{R}^{p \times M}}{\text{minimize}} 
+\quad  \sum_{(i,j)\in \mathbf{O}}  \left( x_{ij} - \sum_{m=1}^{M} a_{im} b_{jm} \right)^{2}   
+\end{aligned}  
+$$  
+
+here $\mathbf{O}$ is the set of all observed pairs of indices $(i, j$), a subset of the
+possible $n \times p$ pairs. Once we solve this problem:
+
+• we can estimate a missing observation $x_{ij}$ using $x_{ij} \approx \sum_{m=1}^{M} a_{im} b_{jm}$.
+
+• we can (approximately) recover the $M$ principal component scores
+and loadings, as we did when the data were complete.
+
+
+<center>
+
+![](images/18_pca_mv.PNG){width=60%, height=60%}
+   
+</center>
+
+
+
+## Clustering Methods
+
+Clustering refers to a very broad set of techniques for finding subgroups, or 
+clusters, in a data set. When we cluster the observations of a data set, we
+seek to partition them into distinct groups so that the observations within
+each group are quite similar to each other, while observations in different
+groups are quite different from each other. Of course, to make this concrete,
+we must define what it means for two or more observations to be similar
+or different. Indeed, this is often a domain-specific consideration that must
+be made based on knowledge of the data being studied.
+
+
+### K-Means Clustering
+
+Let $C_1, \cdots , C_K$
+denote sets containing the indices of the observations in each cluster.
+The idea behind K-means clustering is that a good clustering is one for which the
+within-cluster variation is as small as possible.
+The within-cluster variation
+for cluster $C_k$ is a measure $W(C_k)$ of the amount by which the observations
+within a cluster differ from each other. Hence we want to solve the problem
+
+$$\underset{C_1, \cdots , C_K}{\text{minimize}} \sum_{k=1}^{K} W(C_k)$$
+
+
+Solving the problem seems like a reasonable idea, but in order to make it
+actionable we need to define the within-cluster variation. There are many
+possible ways to define this concept, but by far the most common choice
+involves squared Euclidean distance. That is, we define
+
+\begin{eqnarray}
+W(C_k) &=& \frac{1}{|C_k|} \sum_{i,i^{\prime} \in C_k} (x_i -x_{i^{\prime}})^\prime (x_i -x_{i^{\prime}}) \\
+ &=& \frac{1}{|C_k|} \sum_{i,i^{\prime} \in C_k} \sum_{j=1}^{p} (x_{ij} -x_{i^{\prime}j})^2
+\end{eqnarray}
+
+
+where $|C_k|$ denotes the number of observations in the $k$th cluster.
+
+
+This is in fact a very difficult problem to solve
+precisely, since there are almost Kn ways to partition $n$ observations into $K$
+clusters. This is a huge number unless $K$ and $n$ are tiny! Fortunately, a very
+simple algorithm can be shown to provide a local optimum—a pretty good
+solution-to the K-means optimization problem.
+
+<center>
+
+![](images/19_kmeans.PNG){width=60%, height=60%}
+   
+</center>
+
+
+<center>
+
+![](images/19_kmeans_02.PNG){width=60%, height=60%}
+   
+</center>
+
+
+
+## Hierarchical Clustering
+
 
