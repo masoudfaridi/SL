@@ -2,9 +2,10 @@
 title: "Statistical Learning"
 author: "Masoud Faridi"
 date: "2024-10-02"
-header-includes:
-   - \usepackage{amsmath}
-output: pdf_document
+output:
+  pdf_document: default
+  word_document: default
+header-includes: \usepackage{amsmath}
 ---
 
 
@@ -566,12 +567,12 @@ $Z_1, . . . , Z_M$, and then using these
 components as the predictors in a linear regression model that is fit using least squares. The key idea is that often a small number of principal
 components suffice to explain most of the variability in the data, as well
 as the relationship with the response. In other words, we assume that the
-directions in which $X_1, . . . , X_p$ show the most variation are the directions
+directions in which $X_1, \cdots , X_p$ show the most variation are the directions
 that are associated with Y. While this assumption is not guaranteed to be
 true, it often turns out to be a reasonable enough approximation to give
 good results.
 
-Let $Z_1, . . . , Z_M$ represent $M < p$ linear combinations of our original
+Let $Z_1, \cdots , Z_M$ represent $M < p$ linear combinations of our original
 linear combination $p$ predictors. That is,
 $$Z_m = \sum_{j=1}^{p} \phi_{jm} X_j$$
 
@@ -599,7 +600,7 @@ directions to use for predicting the response.
 
 We now present partial least squares (PLS), a supervised alternative to 
 PCR. Like PCR, PLS is a dimension reduction method, which first identifies
-a new set of features $Z_1, . . . , Z_M$ that are linear combinations of the original
+a new set of features $Z_1, \cdots , Z_M$ that are linear combinations of the original
 features, and then fits a linear model via least squares using these M new
 features. But unlike PCR, PLS identifies these new features in a supervised
 way—that is, it makes use of the response Y in order to identify new
@@ -639,6 +640,23 @@ generally standardize the predictors and response before performing PLS.
 
 
 # Classification
+
+
+Accuracy: This metric shows us to what extent the predicted data by our model matches the actual data. 
+
+Precision: This metric shows us how much of the data that our model classified as positive are actually positive. 
+
+Recall: This metric indicates the proportion of the actual positive data that our model classified as positive. In other words, this metric shows how sensitive our model is to positive data.
+
+Specificity: This metric indicates the proportion of the actual negative data that our model classified as negative. In other words, this metric shows how sensitive our model is to negative data.
+ 
+F1-measure: This metric shows us how accurate and sensitive our model is in detecting positive and negative data. In other words, this metric is a combination of Precision and Recall.
+<center>
+
+![](images/20_hc_05.PNG){width=100%, height=100%}
+
+</center>
+
 
 
 ## The Classification Setting
@@ -1752,4 +1770,285 @@ solution-to the K-means optimization problem.
 
 ## Hierarchical Clustering
 
+One potential disadvantage of K-means clustering is that it requires us to
+pre-specify the number of clusters K. Hierarchical clustering is an alternative
+approach which does not require that we commit to a particular
+choice of $k$. Hierarchical clustering has an added advantage over $k$-means
+clustering in that it results in an attractive tree-based representation of the
+observations, called a dendrogram.
+Instead, they require the user to specify a
+measure of dissimilarity between (disjoint) groups of observations, based
+on the pairwise dissimilarities among the observations in the two groups.
 
+
+As the name suggests, they produce hierarchical representations in which
+the clusters at each level of the hierarchy are created by merging clusters
+at the next lower level. At the lowest level, each cluster contains a single
+observation. At the highest level there is only one cluster containing all of
+the data.
+
+Strategies for hierarchical clustering divide into two basic paradigms: 
+agglomerative (bottom-up) and divisive (top-down). Agglomerative strategies
+start at the bottom and at each level recursively merge a selected pair of
+clusters into a single cluster. This produces a grouping at the next higher
+level with one less cluster. The pair chosen for merging consist of the two
+groups with the smallest intergroup dissimilarity. Divisive methods start
+at the top and at each level recursively split one of the existing clusters at
+that level into two new clusters. The split is chosen to produce two new
+groups with the largest between-group dissimilarity. With both paradigms
+there are $N - 1$ levels in the hierarchy.
+
+<center>
+
+![](images/20_hc_01.PNG){width=60%, height=60%}
+   
+</center>
+
+
+Each level of the hierarchy represents a particular grouping of the data
+into disjoint clusters of observations. The entire hierarchy represents an
+ordered sequence of such groupings. It is up to the user to decide which
+level (if any) actually represents a “natural” clustering in the sense that
+observations within each of its groups are sufficiently more similar to each
+other than to observations assigned to different groups at that level. The
+Gap statistic described earlier can be used for this purpose.
+
+<center>
+
+![](images/20_hc_02.PNG){width=60%, height=60%}
+   
+</center>
+
+
+<center>
+
+![](images/20_hc_03.PNG){width=60%, height=60%}
+  <figcaption>Left: dendrogram obtained from hierarchically clustering the
+data with complete linkage and Euclidean distance. Center: the
+dendrogram from the left-hand panel, cut at a height of nine (indicated by the
+dashed line). This cut results in two distinct clusters, shown in different colors.
+Right: the dendrogram from the left-hand panel, now cut at a height of five. This
+cut results in three distinct clusters, shown in different colors. Note that the colors
+were not used in clustering, but are simply used for display purposes in this figure.
+  </figcaption>
+</center>
+
+<center>
+
+![](images/20_hc_04.PNG){width=60%, height=60%}
+<figcaption>An illustration of how to properly interpret a dendrogram
+with nine observations in two-dimensional space. Left: a dendrogram generated
+using Euclidean distance and complete linkage. Observations 5 and 7 are quite
+similar to each other, as are observations 1 and 6. However, observation 9 is no
+more similar to observation 2 than it is to observations 8, 5, and 7, even though
+observations 9 and 2 are close together in terms of horizontal distance. This is
+because observations 2, 8, 5, and 7 all fuse with observation 9 at the same height,
+approximately 1.8. Right: the raw data used to generate the dendrogram can be
+used to confirm that indeed, observation 9 is no more similar to observation 2
+than it is to observations 8, 5, and 7
+</figcaption>
+</center>
+
+<center>
+
+![](images/20_hc_05.PNG){width=60%, height=60%}
+<figcaption>A summary of the four most commonly-used types of linkage in
+hierarchical clustering.</figcaption>
+</center>
+
+
+<center>
+
+![](images/20_hc_06.PNG){width=60%, height=60%}
+<figcaption>An illustration of the first few steps of the hierarchical
+clustering algorithm, using the data, with complete linkage
+and Euclidean distance. Top Left: initially, there are nine distinct clusters,
+$\{1\}, \{2\}, \cdots , \{9\}$. Top Right: the two clusters that are closest together, $\{5\}$ and
+$\{7\}$, are fused into a single cluster. Bottom Left: the two clusters that are closest
+together, $\{6\}$ and $\{1\}$, are fused into a single cluster. Bottom Right: the two clusters that are closest together using complete linkage, $\{8\}$ and the cluster $\{5, 7\}$,
+are fused into a single cluster.</figcaption>
+</center>
+
+## Practical Issues in Clustering
+
+### Small Decisions with Big Consequences
+
+In order to perform clustering, some decisions must be made.
+
+• Should the observations or features first be standardized in some way?For instance, maybe the variables should be scaled to have standard deviation one.
+
+• In the case of hierarchical clustering,
+- What dissimilarity measure should be used?
+- What type of linkage should be used?
+- Where should we cut the dendrogram in order to obtain clusters?
+
+• In the case of K-means clustering, how many clusters should we look
+for in the data?
+
+
+
+Each of these decisions can have a strong impact on the results obtained.
+In practice, we try several different choices, and look for the one with
+the most useful or interpretable solution. With these methods, there is no
+single right answer, any solution that exposes some interesting aspects of
+the data should be considered.
+
+
+### Validating the Clusters Obtained
+
+Any time clustering is performed on a data set we will find clusters. But we
+really want to know whether the clusters that have been found represent
+true subgroups in the data, or whether they are simply a result of clustering
+the noise. For instance, if we were to obtain an independent set of observations, 
+then would those observations also display the same set of clusters?
+This is a hard question to answer. There exist a number of techniques for
+assigning a p-value to a cluster in order to assess whether there is more
+evidence for the cluster than one would expect due to chance. However,
+there has been no consensus on a single best approach. 
+
+### Other Considerations in Clustering
+
+Both K-means and hierarchical clustering will assign each observation to
+a cluster. However, sometimes this might not be appropriate. For instance,
+suppose that most of the observations truly belong to a small number of
+(unknown) subgroups, and a small subset of the observations are quite
+different from each other and from all other observations. Then since K-means and hierarchical clustering force every observation into a cluster, the
+clusters found may be heavily distorted due to the presence of outliers that
+do not belong to any cluster. Mixture models are an attractive approach
+for accommodating the presence of such outliers. These amount to a soft
+version of K-means clustering, and are described in ESL.
+
+In addition, clustering methods generally are not very robust to perturbations to the data. For instance, suppose that we cluster n observations,
+and then cluster the observations again after removing a subset of the $n$
+observations at random. One would hope that the two sets of clusters obtained would be quite similar, but often this is not the case!
+
+### A Tempered Approach to Interpreting the Results of Clustering
+
+We have described some of the issues associated with clustering. However,
+clustering can be a very useful and valid statistical tool if used properly. We
+mentioned that small decisions in how clustering is performed, such as how
+the data are standardized and what type of linkage is used, can have a large
+effect on the results. Therefore, we recommend performing clustering with
+different choices of these parameters, and looking at the full set of results
+in order to see what patterns consistently emerge. Since clustering can be
+non-robust, we recommend clustering subsets of the data in order to get a
+sense of the robustness of the clusters obtained. Most importantly, we must
+be careful about how the results of a clustering analysis are reported. These
+results should not be taken as the absolute truth about a data set. Rather,
+they should constitute a starting point for the development of a scientific
+hypothesis and further study, preferably on an independent data set.
+
+
+## Approaches for cluster validation
+
+One of the most important issues in cluster analysis is the evaluation of clustering results
+to find the partitioning that best fits the underlying data. This is the main subject of cluster
+validity.
+
+Any time clustering is performed on a data set we will find clusters. But we
+really want to know whether the clusters that have been found represent
+true subgroups in the data, or whether they are simply a result of clustering
+the noise. For instance, if we were to obtain an independent set of observations, 
+then would those observations also display the same set of clusters?
+This is a hard question to answer. There exist a number of techniques for
+assigning a p-value to a cluster in order to assess whether there is more
+evidence for the cluster than one would expect due to chance. However,
+there has been no consensus on a single best approach.
+
+The procedure of evaluating the results of a clustering algorithm is known under the term
+cluster validity. In general terms, there are three approaches to investigate cluster validity
+(Theodoridis and Koutroubas, 1999). The first is based on external criteria. This implies
+that we evaluate the results of a clustering algorithm based on a pre-specified structure,
+which is imposed on a data set and reflects our intuition about the clustering structure
+of the data set. The second approach is based on internal criteria. We may evaluate the
+results of a clustering algorithm in terms of quantities that involve the vectors of the data
+set themselves (e.g. proximity matrix). The third approach of clustering validity is based on
+relative criteria. Here the basic idea is the evaluation of a clustering structure by comparing
+it to other clustering schemes, resulting by the same algorithm but with different parameter
+values. There are two criteria proposed for clustering evaluation and selection of an optimal
+clustering scheme (Berry and Linoff, 1996):
+
+1. Compactness, the members of each cluster should be as close to each other as possible.
+A common measure of compactness is the variance, which should be minimized.
+
+
+2. Separation, the clusters themselves should be widely spaced. There are three common
+approaches measuring the distance between two different clusters: • Single linkage: It measures the distance between the closest members of the clusters. • Complete linkage: It measures the distance between the most distant members. • Comparison of centroids: It measures the distance between the centers of the clusters.
+
+### Use of external information
+
+External information” can mean various things.
+
+- Variables that “should” be related to the clustering: * known “true” classification, * known related classification, * other (e.g. continuous) variables,
+
+- External variable(s) to be explained/predicted by clustering,
+
+- Informal expert assessment.
+
+
+
+### Visual exploration
+
+### Stability assessment
+
+General principle for stability assessment
+
+* Generate several new datasets out of the original one.
+
+* Cluster all these new datasets.
+
+* Define statistic to formalise how similar new clusterings are to the original one.
+
+* If they are very similar, it’s stable.
+
+### Internal validation indexes
+
+Internal cluster validation uses internal information of the clustering process, e.g., the within-cluster sum of squares.
+
+### Testing for clustering structure
+
+- Is a dataset significantly clustered? Is a clustering with $G + 1$ clusters significantly better than one with $G$?
+
+- Want to make sure that we don’t cluster something truly homogeneous. (Testing for homogeneity H0: no clustering structure, H1: data are clustered.)
+
+
+### Sensitivity analysis and comparison of different clusterings on same dataset
+
+Could apply different clustering methods
+on same dataset and see whether
+and which clusters coincide.
+Sometimes done in literature but hard to interpret.
+Issue: which methods to include and why.
+
+## Gaussian mixture model
+
+
+
+## Multidimensional Scaling
+
+We start with observations $x_1, x_2, \cdots , x_N \in \mathbb{R}^p$, and let $d_{ij}$ be the 
+distance between observations $i$ and $j$. Often we choose Euclidean distance
+$d_{ij} = ||x_i - x_j||$, but other distances may be used. Further, in some applications we may not even have available the data points $x_i$, but only
+have some dissimilarity measure $d_{ij}$. For example, in
+a wine tasting experiment, $d_{ij}$ might be a measure of how different a subject judged wines i and j, and the subject provides such a measure for all
+pairs of wines $i$, $j$. MDS requires only the dissimilarities $d_{ij}$, in contrast to
+the SOM and principal curves and surfaces which need the data points $x_i$.
+Multidimensional scaling seeks values $z_1, z_2, \cdots , z_N \in \mathbb{R}^p$ to minimize
+the so-called stress function
+
+$$S_M(z_1, z_2, \cdots , z_N) = \sum_{i\neq i^\prime \in\{1,\cdots, N \}} (d_{ii^{\prime}} - ||z_i - z_{i\prime}||)^2$$
+
+This is known as least squares or Kruskal–Shephard scaling. The idea is
+to find a lower-dimensional representation of the data that preserves the
+pairwise distances as well as possible.
+
+
+A variation on least squares scaling is the so-called Sammon mapping
+which minimizes
+
+$$S_M(z_1, z_2, \cdots , z_N) = \sum_{i\neq i^\prime \in\{1,\cdots, N \}} \frac{(d_{ii^{\prime}} - ||z_i - z_{i\prime}||)^2}{d_{ii^{\prime}}}$$
+
+In classical scaling, we instead start with similarities $s_{ii^{\prime}}$: often we use
+the centered inner product $s_{ii^{\prime}} = \left<x_i - \bar{x}, x_{i^{\prime}} - \bar{x}\right>$. The problem then is to minimize
+
+$$S_C(z_1, z_2, \cdots , z_N) = \sum_{i\neq i^\prime \in\{1,\cdots, N \}} (s_{ii^{\prime}} - \left<z_i - \bar{z}, z_{i^{\prime}} - \bar{z}\right>)^2$$
