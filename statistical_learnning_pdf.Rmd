@@ -153,6 +153,193 @@ Increase in Variance:
 * Conversely, flexible models often become closely fitted to the training data, leading to greater variability between training data and new data. This means that if a model "overfits" the training data, its predictive power on new and out-of-sample data may decrease, resulting in higher variance.
 Thus, as flexibility increases, while the model can respond to the complexities of relationships and show lower bias, there is also the risk of increased variability, which can lead to poor performance on new data. This relationship between bias and variance forms the basis of the bias-variance trade-off, a key concept in machine learning and statistics.
 
+## Singular-Value Decomposition (SVD)
+
+Given the $N \times p$ data matrix $X$, let
+
+\begin{eqnarray}
+X_{N\times p} &=& U_{N\times N}D_{N\times N}V^T_{N\times p} \\
+  &=& RV^T
+\end{eqnarray}
+
+be the singular-value decomposition (SVD) of $X$; that is, $V$ is $p \times N$ with
+orthonormal columns($V^TV=I_N$), with columns $v_j$ called the right singular vectors, $U$ is $N \times N$ orthogonal($U^TU=UU^T=I_N$) whose columns $u_j$ are
+called the left singular vectors, and $D$ a diagonal matrix
+with elements $d_1 \geq d_2 \geq \cdots \geq d_N \geq 0$  known as the singular values. The matrix $R=UD$ is $N \times N$, with rows $r_i^T$. 
+The columns of $R=UD$ are called the principal components of $X$.
+
+The $N \times N$ gram (inner-product) matrix is
+$$K = XX^T=UD^2V^T.$$
+
+- $U$:  an $N \times N$ matrix of the orthonormal eigenvectors of $XX^T$ 
+
+- $V$:  an $N \times N$ matrix containing the orthonormal eigenvectors of $X^TX$
+
+- $D$: a diagonal matrix with $p$ elements equal to the root of the positive eigenvalues of $XX^T$ or $X^TX$ (both matrics have the same positive eigenvalues anyway).
+
+
+#### Examples
+
+\begin{eqnarray}
+X=\begin{bmatrix}
+3 & 2 & 2 \\
+2 & 3 & -2
+\end{bmatrix}
+\end{eqnarray}
+
+- To calculate the SVD, First, we need to compute the singular values by finding eigenvalues of $XX^T$(to calculate $U$)
+
+
+
+\begin{eqnarray}
+K=XX^T =\begin{bmatrix}
+3 & 2 & 2 \\
+2 & 3 & -2
+\end{bmatrix} \times 
+\begin{bmatrix}
+3 & 2 \\
+2 & 3 \\
+2 & -2 
+\end{bmatrix}
+=\begin{bmatrix}
+17 & 8 \\
+8 & 17 
+\end{bmatrix}
+\end{eqnarray}
+
+- The characteristic equation for the above matrix is:
+
+\begin{eqnarray}
+XX^T-\lambda I &=&0 \\
+\lambda^2 -34\lambda +225&=&0 \\ 
+(\lambda -25)(\lambda -9)&=&0
+\end{eqnarray}
+ 
+- So our singular values are:
+$\sqrt{\lambda_1}=5,\sqrt{\lambda_2}=3$
+
+- Now we find the right singular vectors i.e orthonormal set of eigenvectors of $X^TX$. The eigenvalues of $X^TX$ are 25, 9, and 0, and since $X^TX$ is symmetric we know that the eigenvectors will be orthogonal.
+
+- For $\lambda=25$
+
+\begin{eqnarray}
+XX^T -25I =\begin{bmatrix}
+-12 & 12 & 2 \\
+12 & -12 & -2 \\
+2 & -2 & -17
+\end{bmatrix} 
+\end{eqnarray}
+
+- which can be row-reduces to:
+
+\begin{eqnarray}
+\begin{bmatrix}
+1 & -1 & 0 \\
+0 & 0 & 1 \\
+0 & 0 & 0
+\end{bmatrix} 
+\end{eqnarray}
+
+- A unit vector in the direction of it is:
+
+\begin{eqnarray}
+\begin{bmatrix}
+\frac{1}{\sqrt{2}}  \\
+\frac{1}{\sqrt{2}}  \\
+0 
+\end{bmatrix} 
+\end{eqnarray}
+
+- Similarly, for $\lambda = 9$, the eigenvector is:
+
+\begin{eqnarray}
+\begin{bmatrix}
+\frac{1}{\sqrt{18}}  \\
+-\frac{1}{\sqrt{18}}  \\
+\frac{4}{\sqrt{18}}
+\end{bmatrix} 
+\end{eqnarray}
+
+- For the $3$rd eigenvector, 
+we could use the property that it
+is perpendicular to $v_1$ and $v_2$ such that:
+
+\begin{eqnarray}
+v_1^Tv_3 &=&0 \\
+v_2^Tv_3 &=&0
+\end{eqnarray}
+
+\begin{eqnarray}
+v_3=
+\begin{bmatrix}
+a  \\
+b  \\
+c
+\end{bmatrix}
+=
+\begin{bmatrix}
+a  \\
+-a  \\
+-\frac{a}{2}
+\end{bmatrix}
+=
+\begin{bmatrix}
+\frac{2}{3}  \\
+-\frac{2}{3} \\
+-\frac{1}{3}
+\end{bmatrix}
+\end{eqnarray}
+
+Now, we calculate $U$ using the formula 
+$u_i = \frac{1}{\sqrt{\lambda}} X v_i$ and this gives 
+
+
+
+
+
+\begin{eqnarray}
+U = 
+\begin{bmatrix}
+\frac{1}{\sqrt{2}} & \frac{1}{\sqrt{2}}  \\
+\frac{1}{\sqrt{2}} &-\frac{1}{\sqrt{18}}   \\
+\end{bmatrix} 
+\end{eqnarray}
+- Hence, our final SVD equation becomes:
+\begin{eqnarray}
+X =   
+\begin{bmatrix}  
+\frac{1}{\sqrt{2}} & \frac{1}{\sqrt{18}} & \frac{2}{3} \\
+\frac{1}{\sqrt{2}} & -\frac{1}{\sqrt{18}} & -\frac{2}{3} \\
+0 & \frac{4}{\sqrt{18}} & -\frac{1}{3}  
+\end{bmatrix}  
+\begin{bmatrix}  
+5 & 0 & 0 \\
+0 & 3 & 0 \\
+0 & 0 & 0  
+\end{bmatrix}  
+\begin{bmatrix}  
+\frac{1}{\sqrt{2}} & \frac{1}{\sqrt{2}} & 0 \\
+\frac{1}{\sqrt{18}} & -\frac{1}{\sqrt{18}} & \frac{4}{\sqrt{18}}  
+\end{bmatrix}
+\end{eqnarray}
+
+
+
+
+
+
+
+
+Principal components can be computed using inner-product kernels as
+well; since this is frequently useful, we give some details. Suppose first
+that we have a centered data matrix $X$, and let $X = UDV^T$ be its SVD. Then $Z = UD$ is the matrix of principal component variables. But if $K = XX^T$ , then it follows that $K = UD^2U^T$ , and
+hence we can compute $Z$ from the eigen decomposition of $K$. If $X$ is not
+centered, then we can center it using $\tilde{X}= (I - M)X$, where $M =\frac{1}{N} 11^T$
+is the mean operator. Thus we compute the eigenvectors of the double-centered kernel 
+$$(I - M)K(I - M)$$
+for the principal components from an
+uncentered inner-product matrix. 
+
 
 # Linear Regression
 
