@@ -421,7 +421,7 @@ This function tests the null hypothesis that a sample comes from a normal distri
 
 ### statistic
 
-s^2 + k^2, where s is the z-score returned by skewtest and k is the z-score returned by kurtosistest.
+$s^2 + k^2$, where s is the z-score returned by skewtest and k is the z-score returned by kurtosistest.
 
 ### pvalue
 
@@ -1518,6 +1518,84 @@ the earlier trees, and shrunken down before it is used.
 grow the trees successively. However, each tree is perturbed in order
 to avoid local minima and achieve a more thorough exploration of
 the model space.
+
+
+# kernel functions
+
+## A visual example to help intuition
+
+Consider the following dataset where the yellow and blue points are clearly not linearly separable in two dimensions.
+
+<center>
+
+![](images/kernel.png){width=100%, height=100%}
+   
+</center>
+
+If we could find a higher dimensional space in which these points were **linearly separable**, then we could do the following:
+
+- Map the original features to the higher, transformer space (feature mapping)
+- Perform linear SVM in this higher space
+- Obtain a set of weights corresponding to the decision boundary hyperplane
+- Map this hyperplane back into the original 2D space to obtain a non linear decision boundary
+
+There are many higher dimensional spaces in which these points are linearly separable. Here is one example
+
+$$ x_1, x_2 : \rightarrow z_1, z_2, z_3$$
+$$ z_1 = \sqrt{2}x_1x_2 \ \   z_2 = x_1^2 \ \  z_3 = x_2^2$$
+
+This is where the Kernel trick comes into play. Quoting the above great answers
+
+Suppose we have a mapping $\varphi \, : \, \mathbb R^n \to \mathbb R^m$ that brings our vectors in $\mathbb R^n$ to some feature space $\mathbb R^m$. Then the dot product of $\mathbf x$ and $\mathbf y$ in this space is $\varphi(\mathbf x)^T \varphi(\mathbf y)$. A kernel is a function $k$ that corresponds to this dot product, i.e. $k(\mathbf x, \mathbf y) = \varphi(\mathbf x)^T \varphi(\mathbf y)$
+
+If we could find a kernel function that was equivalent to the above feature map, then we could plug the kernel function in the linear SVM and perform the calculations very efficiently. 
+
+## Polynomial kernel
+
+It turns out that the above feature map corresponds to the well known **polynomial kernel** : $K(\mathbf{x},\mathbf{x'}) = (\mathbf{x}^T\mathbf{x'})^d$. Let $d = 2$ and $\mathbf{x} = (x_1, x_2)^T$ we get
+
+$$\begin{aligned}
+    k(\begin{pmatrix} x_1 \\ x_2 \end{pmatrix}, \begin{pmatrix} x_1' \\ x_2' \end{pmatrix} ) & = (x_1x_1' + x_2x_2')^2
+    \\
+    & = 2x_1x_1'x_2x_2' + (x_1x_1')^2 + (x_2x_2')^2
+    \\
+    & = (\sqrt{2}x_1x_2,  \ x_1^2, \ x_2^2) \ \begin{pmatrix} \sqrt{2}x_1'x_2' \\ x_1'^2  \\ x_2'^2 \end{pmatrix}
+    \end{aligned}$$
+
+$$k(\begin{pmatrix} x_1 \\ x_2 \end{pmatrix}, \begin{pmatrix} x_1' \\ x_2' \end{pmatrix} ) = \phi(\mathbf{x})^T \phi(\mathbf{x'})$$
+
+$$ \phi(\begin{pmatrix} x_1 \\ x_2 \end{pmatrix}) =\begin{pmatrix}  \sqrt{2}x_1x_2 \\ x_1^2 \\ x_2^2 \end{pmatrix}$$
+
+## Visualizing the feature map and the resulting boundary line
+
+- Left-hand side plot shows the points plotted in the transformed space together with the SVM linear boundary hyperplane
+- Right-hand side plot shows the result in the original 2-D space
+
+<center>
+
+![](images/kernel_2.png){width=100%, height=100%}
+   
+</center>
+
+## kernel functions
+
+Kernel is a way of computing the dot product of two vectors $\mathbf x$ and $\mathbf y$ in some (possibly very high dimensional) feature space, which is why kernel functions are sometimes called "generalized dot product". 
+
+Suppose we have a mapping $\varphi \, : \, \mathbb R^n \to \mathbb R^m$ that brings our vectors in $\mathbb R^n$ to some feature space $\mathbb R^m$. Then the dot product of $\mathbf x$ and $\mathbf y$ in this space is $\varphi(\mathbf x)^T \varphi(\mathbf y)$. A kernel is a function $k$ that corresponds to this dot product, i.e. $k(\mathbf x, \mathbf y) = \varphi(\mathbf x)^T \varphi(\mathbf y)$. 
+
+Why is this useful? Kernels give a way to compute dot products in some feature space without even knowing what this space is and what is $\varphi$.
+
+For example, consider a simple polynomial kernel $k(\mathbf x, \mathbf y) = (1 + \mathbf x^T \mathbf y)^2$ with $\mathbf x, \mathbf y \in \mathbb R^2$. This doesn't seem to correspond to any mapping function $\varphi$, it's just a function that returns a real number. Assuming that $\mathbf x = (x_1, x_2)$ and $\mathbf y = (y_1, y_2)$, let's expand this expression:
+
+$$\begin{aligned}
+k(\mathbf x, \mathbf y) & = (1 + \mathbf x^T \mathbf y)^2 = (1 + x_1 \, y_1  + x_2 \, y_2)^2  \\
+ & = 1 + x_1^2 y_1^2 + x_2^2 y_2^2 + 2 x_1 y_1 + 2 x_2 y_2 + 2 x_1 x_2 y_1 y_2
+\end{aligned}$$
+
+Note that this is nothing else but a dot product between two vectors $(1, x_1^2, x_2^2, \sqrt{2} x_1, \sqrt{2} x_2, \sqrt{2} x_1 x_2)$ and $(1, y_1^2, y_2^2, \sqrt{2} y_1, \sqrt{2} y_2, \sqrt{2} y_1 y_2)$, and $\varphi(\mathbf x) = \varphi(x_1, x_2) = (1, x_1^2, x_2^2, \sqrt{2} x_1, \sqrt{2} x_2, \sqrt{2} x_1 x_2)$. So the kernel $k(\mathbf x, \mathbf y) = (1 + \mathbf x^T \mathbf y)^2 = \varphi(\mathbf x)^T \varphi(\mathbf y)$ computes a dot product in 6-dimensional space without explicitly visiting this space. 
+
+Another example is Gaussian kernel $k(\mathbf x, \mathbf y) = \exp\big(- \gamma \, \|\mathbf x - \mathbf y\|^2 \big)$. If we Taylor-expand this function, we'll see that it corresponds to an infinite-dimensional codomain of $\varphi$.
+
 
 
 # Support Vector Machines
