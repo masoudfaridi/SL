@@ -2462,3 +2462,63 @@ In classical scaling, we instead start with similarities $s_{ii^{\prime}}$: ofte
 the centered inner product $s_{ii^{\prime}} = \left<x_i - \bar{x}, x_{i^{\prime}} - \bar{x}\right>$. The problem then is to minimize
 
 $$S_C(z_1, z_2, \cdots , z_N) = \sum_{i\neq i^\prime \in\{1,\cdots, N \}} (s_{ii^{\prime}} - \left<z_i - \bar{z}, z_{i^{\prime}} - \bar{z}\right>)^2$$
+
+
+# State Space Model
+
+
+## State Space Model Definition
+
+In a state space model, the observations $y_t, t=1,2,\cdots$
+are drawn from a conditional pdf
+
+$$f \left(y_t | x_t,y_1,\cdots,y_{t-1}\right )$$
+, where $x_t$ is the hidden state at time $t$. The states
+$x_t, t=1,2,\cdots$ evolve according to a Markov chain with transition density
+
+$$f(x_t|x_{t-1}, \theta )$$
+
+Here, $\theta$ denotes the vector of model parameters.
+
+source: (Statistical Modeling and Computation, Dirk P. Kroese , Joshua C.C. Chan)
+
+## Kalman Filter
+
+(Kalman Filter). State space models originate from the analysis of
+dynamical systems. One of the most fundamental examples is the linear Gaussian
+discrete-time state space model:
+
+\begin{eqnarray}
+y_t &=& B x_t +  \delta_t
+\\ 
+x_t &=& A x_{t-1} + \epsilon_t
+\end{eqnarray}
+
+where $x_t$ is an n-dimensional (hidden) state vector and $y_t$ an m-dimensional output
+vector. $A$ and $B$ are fixed matrices, and $\{\delta_t \}$ and $\{ \epsilon_t \}$ are zero-mean normal random
+vectors with covariance matrices $D$ and $E$, respectively. All fıtg and f"tg are
+independent. The initial state $x_0$ is assumed to be $N(\mu_0,\Sigma_0)$ distributed.
+
+## Unobserved Components Model
+
+An important state space model is the unobserved components model. In the first
+level, the (real-valued) observable $y_t$ at time $t$ is modeled to depend on the state or
+unobserved component $\pi_t$ as follows:
+
+$$y_t = \tau_t +\epsilon_t$$
+
+where $\epsilon_t \stackrel{i.i.d}{\sim} N(0,\sigma^2)$.
+
+###  Random walk
+
+An important unobserved components model
+is random walk as follows:
+
+\begin{eqnarray}
+y_t &=& \tau_t +\epsilon_t \\
+\tau_t &=& \tau_{t-1} + u_t
+\end{eqnarray}
+
+ where $u_t \stackrel{i.i.d}{\sim} N(0,w^2)$. That is, the conditional distribution of
+$\tau_t$ given $\tau_{t-1}$ and $w^2$ is $N(u_{t-1},w^2)$ the current state $\tau_t$ centers around the previous
+one $\tau_{t-1}$ while $w^2$ controls how close the two terms are on average.
