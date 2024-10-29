@@ -341,6 +341,151 @@ for the principal components from an
 uncentered inner-product matrix. 
 
 
+## Curse of dimensionality
+
+The curse of dimensionality refers to various phenomena that arise when analyzing and organizing data in high-dimensional spaces that do not occur in low-dimensional settings such as the three-dimensional physical space of everyday experience.
+
+### Risks of Overfitting due to Sparsity
+
+We are so used to living in three dimensions that our intuition fails us
+when we try to imagine a high-dimensional space. Even a basic 4D
+hypercube is incredibly hard to picture in our minds, let
+alone a 200-dimensional ellipsoid bent in a 1,000-dimensional space.
+
+
+<center>
+
+![](images/22_curse_01.PNG){width=50%, height=50%}
+<figcaption>Point, segment, square, cube, and tesseract ($0$D to $4$D hypercubes).</figcaption>  
+</center>
+
+It turns out that many things behave very differently in high-dimensional
+space. For example, if you pick a random point in a unit square (a $1 \times 1$
+square), it will have only about a $0.4\%$ chance ($1-(1-2\times a)^2=1-0.996004=0.003996$) of being located less than
+$0.001$ from a border (in other words, it is very unlikely that a random point
+will be “extreme” along any dimension) But in a 10,000-dimensional unit
+hypercube (a $1 \times 1 \times \cdots \times 1$ cube, with ten thousand 1s), this probability is greater than $99.999999\%$. 
+Most points in a high-dimensional hypercube are very close to the border.
+
+
+
+```{r}
+sprintf('%0.15f',1-(1-2*.001)^10000)
+```
+
+<center>
+
+![](images/23_curse_02.PNG){width=50%, height=50%}
+</center>
+
+
+Here is a more troublesome difference: if you pick two points randomly in a
+unit square, the distance between these two points will be, on average,
+roughly 0.52. If you pick two random points in a 3D unit cube, the average
+distance will be roughly 0.66. But what about two points picked randomly in
+a 1,000,000-dimensional unit hypercube? The average distance, believe it or
+not, will be about 408.25 (roughly 1,000,0006)! This is counterintuitive: how
+can two points be so far apart when they both lie within the same unit
+hypercube? Well, there’s just plenty of space in high dimensions. As a result,
+high-dimensional datasets are at risk of being very sparse: most training
+instances are likely to be far away from each other. This also means that a
+new instance will likely be far away from any training instance, making
+predictions much less reliable than in lower dimensions, since they will be
+based on much larger extrapolations. In short, the more dimensions the
+training set has, the greater the risk of overfitting it.
+In theory, one solution to the curse of dimensionality could be to increase the
+size of the training set to reach a sufficient density of training instances.
+Unfortunately, in practice, the number of training instances required to reach
+a given density grows exponentially with the number of dimensions.
+
+### Regression with Least Squares in High-Dimensional Data
+
+
+The Issue in the Case of  $p\geq n$
+When the number of features 
+$p$ is equal to or greater than the number of observations $n$, the matrix 
+$X^TX$ behaves as follows:
+
+* $X$ is an $n \times(p+1)$
+ matrix (including a column of ones for $\beta_0$). 
+
+$p\geq n$, the number of rows is equal to or less than the number of columns.
+
+This means:
+
+* Non-invertibility of  $X^TX$: In the case of $p\geq n$
+, the matrix $X^TX$ is not invertible, which implies that we cannot compute the coefficients $\beta$
+using the standard formula.
+
+* Perfect Fit and Overfitting: Even if an inverse were to exist (which is rare in high dimensional cases), regression with a large number of features means we can find a model with arbitrary coefficients that results in zero residuals, effectively fitting all training data perfectly. This indicates overfitting, where the model captures noise rather than the true underlying relationship.
+
+
+An example is shown in Figure 6.22 with $p = 1$ feature (plus an intercept)
+in two cases: when there are $20$ observations, and when there are only
+two observations.
+
+<center>
+
+![](images/24_curse_03.PNG){width=50%, height=50%}
+<figcaption>Figure 6.22: Left: Least squares regression in the low-dimensional setting.
+Right: Least squares regression with n = 2 observations and two parameters to be
+estimated (an intercept and a coefficient).</figcaption>  
+</center>
+
+
+Figure 6.23 further illustrates the risk of carelessly applying least squares
+when the number of features p is large. Data were simulated with n = 20
+observations, and regression was performed with between 1 and 20 features,
+
+
+<center>
+
+![](images/25_curse_04.PNG){width=50%, height=50%}
+<figcaption>Figure 6.23: On a simulated example with n = 20 training observations,
+features that are completely unrelated to the outcome are added to the model.
+Left: The R2 increases to 1 as more features are included. Center: The training
+set MSE decreases to 0 as more features are included. Right: The test set MSE
+increases as more features are included.</figcaption>  
+</center>
+
+
+each of which was completely unrelated to the response. As shown in the
+figure, the model R2 increases to 1 as the number of features included in the
+model increases, and correspondingly the training set MSE decreases to 0
+as the number of features increases, even though the features are completely
+unrelated to the response. On the other hand, the MSE on an independent
+test set becomes extremely large as the number of features included in the
+model increases, because including the additional predictors leads to a vast
+increase in the variance of the coefficient estimates. Looking at the test
+set MSE, it is clear that the best model contains at most a few variables.
+However, someone who carelessly examines only the $R^2$ or the training set
+MSE might erroneously conclude that the model with the greatest number
+of variables is best. This indicates the importance of applying extra care
+when analyzing data sets with a large number of variables, and of always
+evaluating model performance on an independent test set.
+
+
+### $\hat{\sigma^2}=0$
+
+Unfortunately, the $C_p$, $AIC$, and $BIC$ approaches
+are not appropriate in the high-dimensional setting, because estimating $\hat{\sigma^2}$
+is problematic. 
+
+### Multicollinearity and Interpreting Results in High Dimensions
+
+
+When we perform the lasso, ridge regression, or other regression procedures in the high-dimensional setting, we must be quite cautious in the way
+that we report the results obtained. In the high-dimensional setting, the multicollinearity
+problem is extreme: any variable in the model can be written as a linear
+combination of all of the other variables in the model. Essentially, this
+means that we can never know exactly which variables (if any) truly are
+predictive of the outcome, and we can never identify the best coefficients
+for use in the regression. At most, we can hope to assign large regression
+coefficients to variables that are correlated with the variables that truly are
+predictive of the outcome.
+
+
+
 # Linear Regression
 
 ## R-squared
