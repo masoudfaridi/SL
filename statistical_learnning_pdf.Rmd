@@ -2501,24 +2501,79 @@ independent. The initial state $x_0$ is assumed to be $N(\mu_0,\Sigma_0)$ distri
 
 ## Unobserved Components Model
 
-An important state space model is the unobserved components model. In the first
-level, the (real-valued) observable $y_t$ at time $t$ is modeled to depend on the state or
-unobserved component $\pi_t$ as follows:
-
+An important state space model is the unobserved components model.
+In the unobserved
+components model, the measurement equation is given by
 $$y_t = \tau_t +\epsilon_t$$
+where $\epsilon_t \stackrel{i.i.d}{\sim} N(0,\sigma^2)$. The states, in turn, are initialized with 
+$\tau_1\sim N(\tau_0, \omega_0^2)$
+for some known constants $\tau_0$ and $\omega_0^2$ and evolve according to the
+transition equation
+$$\tau_t = \tau_{t-1} + u_t$$
 
-where $\epsilon_t \stackrel{i.i.d}{\sim} N(0,\sigma^2)$.
+for $t=2,3,\cdots,T$ , where $u_t \stackrel{i.i.d}{\sim} N(0,\omega^2)$. That is, the conditional distribution of
+$\tau_t$ given $\tau_{t-1}$ and $\omega^2$ is $N(\tau_{t-1},\omega^2)$.
 
-###  Random walk
 
-An important unobserved components model
-is random walk as follows:
+## Time-Varying Parameter Model
+
+The unobserved components model discussed in the last section may be viewed as
+a linear regression model with only an intercept, where the intercept is allowed to
+change over time. More generally, one can consider linear regression models where
+all the regression coefficients are time-varying.
+
+
+### Definition Time-Varying Parameter Autoregressive Model
+
+In the pth-order time-varying parameter autoregressive model, or time-varying
+parameter AR(p), the measurement equation is given by
+
+$$y_t = \beta_{0t} + \beta_{1t} y_{t-1} +\cdots +\beta_{pt}y_{t-p} + \epsilon_t$$
+
+for $t=1,\cdots, T$, where $\epsilon_t \stackrel{i.i.d}{\sim}N(0,\sigma^2)$. The autoregressive coefficients 
+$$\mathbf{\beta}_t =(\beta_{0t}, \beta_{1t},\cdots, \beta_{pt}$$ in
+turn evolve according to the following transition equation:
+
+$\mathbf{\beta}_t = \mathbf{\beta}_{t-1} =\mathbf{u}_t$
+
+where $\mathbf{u}_t \stackrel{i.i.d}{\sim}N(\mathbf{0},\Sigma)$ and the transition equation is
+initialized with $\mathbf{\beta}_1 \stackrel{i.i.d}{\sim}N(\mathbf{\beta}_0,\Sigma_0)$
+
+
+
+## Stochastic Volatility Model
+
+A prominent feature of many time series, particularly macroeconomic and financial
+data, is the so-called volatility clustering—the phenomenon that large changes
+in observations tend to be followed by large changes and small changes followed
+by small changes. For example, large movements in asset returns tend to cluster
+together (e.g., during crisis), whereas there might be little variation over long
+stretches of “normal periods.” Models with constant variance obviously do not
+allow the volatility of the observations to change over time and hence cannot model
+volatility clustering.
+
+### Definition Stochastic Volatility Model
+
+In the stochastic volatility
+model the observation at time $t$ is given by
+$$y_t = e^{\frac{h_t}{2}}\varepsilon_t$$
+
+where $\varepsilon_t \stackrel{i.i.d}{\sim} N(0,1)$ Consequently, the volatility of $y_t$ is $Var(y_t)=e^{h_t}$.
+The states are initialized with $h_1 \sim N(h_0,\sigma_0^2)$ for some known constants $h_0$
+and $\sigma_0^2$ and evolve according to a random walk
+ $$h_t = h_{t-1} + \nu_t$$
+where $\nu_t \stackrel{i.i.d}{\sim} N(0,\omega^2)$. The state $h_t$ is called the log-volatility.
+
+## Modeling Inflation with Unobserved Components Stochastic Volatility Model
+
+In this example we extend the constant variance to include stochastic volatility in the measurement equation. Specifically, consider
 
 \begin{eqnarray}
-y_t &=& \tau_t +\epsilon_t \\
-\tau_t &=& \tau_{t-1} + u_t
+y_t && \tau_t +e^{\frac{h_2}{2}}\varepsilon_t\\
+\tau_t && \tau_{t-1} +u_t\\
+h_t && h_{t-1} +\nu_t\\
 \end{eqnarray}
+where $\varepsilon_t \stackrel{i.i.d}{\sim} N(0,1)$, $u_t\stackrel{i.i.d}{\sim}N(0,\omega_{\tau}^2)$ and $\nu_t \stackrel{i.i.d}{\sim} N(0,\omega_h^2)$. The state equations are initialized with $\tau_1 \sim N(\tau_0, V_\tau)$ and $h_1 \sim N(h_0,V_h)$ where
 
- where $u_t \stackrel{i.i.d}{\sim} N(0,w^2)$. That is, the conditional distribution of
-$\tau_t$ given $\tau_{t-1}$ and $w^2$ is $N(u_{t-1},w^2)$ the current state $\tau_t$ centers around the previous
-one $\tau_{t-1}$ while $w^2$ controls how close the two terms are on average.
+$\tau_0=h_0=0$ and $V_\tau =V_h=9$. We assume independent inverse-gamma priors for 
+$\omega^2_\tau$ and $\omega^2_h$.
